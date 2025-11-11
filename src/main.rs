@@ -42,10 +42,18 @@ async fn main() {
         .await
         .expect("Couldn't connect to database");
 
-    sqlx::migrate!()
-        .run(&pool)
-        .await
-        .expect("Couldn't run database migrations");
+    let migrations_path = std::path::Path::new("./migrations");
+
+    if migrations_path.exists() {
+        let migrator = sqlx::migrate::Migrator::new(migrations_path)
+            .await
+            .expect("Failed to create Migrator instance");
+
+        migrator
+            .run(&pool)
+            .await
+            .expect("Couldn't run database migrations");
+    }
 
     let commands = vec![commands::general::db()];
 
