@@ -6,6 +6,7 @@ on:
     branches: [ "master" ]
 env:
   CARGO_TERM_COLOR: always
+  DATABASE_URL: sqlite::memory:
 jobs:
   build:
     runs-on: ubuntu-latest
